@@ -23,8 +23,8 @@ final class Module_BasicAuth extends GDO_Module
     public function getConfig()
     {
         return [
-            GDT_Secret::make('basic_auth_user')->initial('gdo6'),
-            GDT_Secret::make('basic_auth_pass')->initial('gdo6'),
+            GDT_Secret::make('basic_auth_user')->initial('gdo6')->label('user_name'),
+            GDT_Secret::make('basic_auth_pass')->initial('gdo6')->label('password'),
         ];
     }
     public function cfgUsername() { return $this->getConfigVar('basic_auth_user'); }
