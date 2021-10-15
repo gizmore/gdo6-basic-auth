@@ -55,7 +55,7 @@ final class Module_BasicAuth extends GDO_Module
     private function deny()
     {
         hdr('WWW-Authenticate: Basic realm="'.sitename().'"');
-        hdr('HTTP/1.0 401 Unauthorized');
+        hdr('HTTP/1.1 401 Unauthorized');
         echo t('err_basic_auth');
         exit;
     }
