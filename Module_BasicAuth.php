@@ -3,6 +3,7 @@ namespace GDO\BasicAuth;
 
 use GDO\Core\GDO_Module;
 use GDO\Core\GDT_Secret;
+use GDO\Core\Application;
 
 /**
  * BasicAuth module for gdo6.
@@ -35,21 +36,24 @@ final class Module_BasicAuth extends GDO_Module
     ##################
     public function onInit()
     {
-        if (!isset($_SERVER['PHP_AUTH_USER']))
-        {
-            $this->deny();
-        }
-        else
-        {
-            if (strcasecmp($this->cfgUsername(), $_SERVER['PHP_AUTH_USER']) !== 0)
-            {
-                $this->deny();
-            }
-            if ($this->cfgPassword() !== $_SERVER['PHP_AUTH_PW'])
-            {
-                $this->deny();
-            }
-        }
+    	if (Application::instance()->isWebServer())
+    	{
+	        if (!isset($_SERVER['PHP_AUTH_USER']))
+	        {
+	            $this->deny();
+	        }
+	        else
+	        {
+	            if (strcasecmp($this->cfgUsername(), $_SERVER['PHP_AUTH_USER']) !== 0)
+	            {
+	                $this->deny();
+	            }
+	            if ($this->cfgPassword() !== $_SERVER['PHP_AUTH_PW'])
+	            {
+	                $this->deny();
+	            }
+	        }
+    	}
     }
     
     private function deny()
