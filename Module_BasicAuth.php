@@ -9,7 +9,7 @@ use GDO\Core\Application;
  * BasicAuth module for gdo6.
  * 
  * @author gizmore
- * @since 6.10.4
+ * @since 6.11.0
  */
 final class Module_BasicAuth extends GDO_Module
 {
@@ -24,8 +24,8 @@ final class Module_BasicAuth extends GDO_Module
     public function getConfig()
     {
         return [
-            GDT_Secret::make('basic_auth_user')->initial('gdo6')->label('user_name'),
-            GDT_Secret::make('basic_auth_pass')->initial('gdo6')->label('password'),
+            GDT_Secret::make('basic_auth_user')->label('user_name'),
+            GDT_Secret::make('basic_auth_pass')->label('password'),
         ];
     }
     public function cfgUsername() { return $this->getConfigVar('basic_auth_user'); }
@@ -44,14 +44,18 @@ final class Module_BasicAuth extends GDO_Module
 	        }
 	        else
 	        {
-	            if (strcasecmp($this->cfgUsername(), $_SERVER['PHP_AUTH_USER']) !== 0)
-	            {
-	                $this->deny();
-	            }
-	            if ($this->cfgPassword() !== $_SERVER['PHP_AUTH_PW'])
-	            {
-	                $this->deny();
-	            }
+	        	if ( ($username = $this->cfgUsername()) &&
+	        	     ($password = $this->cfgPassword()) )
+	        	{
+	        		if (strcasecmp($username, $_SERVER['PHP_AUTH_USER']) !== 0)
+	        		{
+	        			$this->deny();
+	        		}
+		        	if (strcasecmp($password, $_SERVER['PHP_AUTH_PW']) !== 0)
+		        	{
+		        		$this->deny();
+		        	}
+	        	}
 	        }
     	}
     }
