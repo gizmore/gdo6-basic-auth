@@ -42,32 +42,29 @@ final class Module_BasicAuth extends GDO_Module
     	}
     	if (Application::instance()->isWebServer())
     	{
-	        if (!isset($_SERVER['PHP_AUTH_USER']))
-	        {
-	            $this->deny();
-	        }
-	        else
-	        {
-	        	if ( ($username = $this->cfgUsername()) &&
-	        	     ($password = $this->cfgPassword()) )
+        	if ( ($username = $this->cfgUsername()) &&
+        	     ($password = $this->cfgPassword()) )
+        	{
+        		if (!isset($_SERVER['PHP_AUTH_USER']))
+        		{
+        			$this->deny();
+        		}
+        		elseif (strcasecmp($username, $_SERVER['PHP_AUTH_USER']) !== 0)
+        		{
+        			$this->deny();
+        		}
+	        	elseif (strcmp($password, $_SERVER['PHP_AUTH_PW']) !== 0)
 	        	{
-	        		if (strcasecmp($username, $_SERVER['PHP_AUTH_USER']) !== 0)
-	        		{
-	        			$this->deny();
-	        		}
-		        	if (strcasecmp($password, $_SERVER['PHP_AUTH_PW']) !== 0)
-		        	{
-		        		$this->deny();
-		        	}
+	        		$this->deny();
 	        	}
-	        }
+        	}
     	}
     }
     
     private function deny()
     {
+        hdrc('HTTP/1.1 401 Unauthorized');
         hdr('WWW-Authenticate: Basic realm="'.sitename().'"');
-        hdr('HTTP/1.1 401 Unauthorized');
         echo t('err_basic_auth');
         exit;
     }
