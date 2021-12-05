@@ -9,7 +9,7 @@ use GDO\Core\Application;
  * BasicAuth module for gdo6.
  * 
  * @author gizmore
- * @since 6.11.0
+ * @since 6.11.1
  */
 final class Module_BasicAuth extends GDO_Module
 {
@@ -36,6 +36,10 @@ final class Module_BasicAuth extends GDO_Module
     ##################
     public function onInit()
     {
+    	if (@$_SERVER['REQUEST_METHOD'] === 'OPTIONS')
+    	{
+    		return;
+    	}
     	if (Application::instance()->isWebServer())
     	{
 	        if (!isset($_SERVER['PHP_AUTH_USER']))
